@@ -1,17 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>bhoot aaya</title>
-  <script src="script.js" defer></script>
-</head>
-<body>
-<label for="message">message</label>
-<br>
-<div style="display: flex;">
-  <textarea name="message" id="message"></textarea>
-  <div id="logger" style="flex-grow: 1;"></div>
-</div>
-<button type="button" name="button" id="send">Send</button>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chat Backend viewing</title>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+  <form id="initial-form">
+
+    <label for="room-name"></label><input type="text" id="room-name" required placeholder="Enter your room name" />
+    <button type="button" id="generate-room-name">Generate Room Name</button>
+    <button type="submit" id="join-room-btn">Create/Join Room</button>
+    <br />
+    <label for="username"></label><input type="text" id="username" required placeholder="Enter username" />
+    <button type="button" id="generate-username">Generate Username</button>
+  </form>
+    <br />
+    <label for="message">message</label>
+    <br />
+    <div style="display: flex;">
+      <textarea name="message" id="message"></textarea>
+      <div id="logger" style="flex-grow: 1;"></div>
+    </div>
+    <button type="button" name="button" id="send">Send</button>
+  </body>
 </html>

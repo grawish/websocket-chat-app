@@ -1,13 +1,13 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-require("express-ws")(app);
+require('express-ws')(app);
 
-app.use(express.static("public"));
+app.use(express.static('public'));
 
 // const sockets = [
 //   {
 //     id: "1",
-//     ws: {},
+//hi     ws: {},
 //   },
 // ];
 
@@ -16,10 +16,10 @@ let groups = [];
 const handleMessage = (ws, message) => {
   try {
     const { type, payload } = JSON.parse(message);
-    const { text, groupId } = payload;
+    const { text, groupId, userId } = payload;
     const group = groups.find((group) => group.id === groupId);
     switch (type) {
-      case "join":
+      case 'join':
         if (!group) {
           groups.push({
             id: groupId,
@@ -28,27 +28,24 @@ const handleMessage = (ws, message) => {
         } else {
           group.sockets.add(ws);
         }
-        if (!ws.userId) {
-          ws.userId = Math.random().toString(36).substring(7);
-        }
         group?.sockets.forEach((socket) => {
           socket.send(
             JSON.stringify({
-              type: "join",
+              type: 'join',
               payload: {
-                userId: ws.userId,
+                userId: userId,
               },
             })
           );
         });
         break;
-      case "send":
+      case 'send':
         if (group) {
           group.sockets.forEach((socket) => {
             socket.send(
               JSON.stringify({
-                type: "message",
-                payload: { text, userId: ws.userId },
+                type: 'message',
+                payload: { text, userId },
               })
             );
           });
@@ -62,16 +59,16 @@ const handleMessage = (ws, message) => {
   }
 };
 
-app.ws("/", (ws) => {
-  ws.on("message", function (msg) {
-    if (msg === "ping") {
-      ws.send("pong");
+app.ws('/', (ws) => {
+  ws.on('message', function (msg) {
+    if (msg === 'ping') {
+      ws.send('pong');
       return;
     }
     handleMessage(ws, msg);
   });
 
-  ws.on("close", () => {
+  ws.on('close', () => {
     groups = groups.filter((group) => {
       if (group.sockets.size === 1) {
         return false;
@@ -80,7 +77,7 @@ app.ws("/", (ws) => {
       group.sockets.forEach((socket) => {
         socket.send(
           JSON.stringify({
-            type: "close",
+            type: 'close',
             payload: {
               userId: ws.userId,
             },
@@ -92,4 +89,4 @@ app.ws("/", (ws) => {
   });
 });
 
-app.listen(3000, () => console.log("Server started on port 3000"));
+app.listen(3000, () => console.log('Server started on port 3000'));
